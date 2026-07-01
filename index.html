@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang=zh-CN>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
+<meta charset=UTF-8>
+<meta name=viewport content=width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover>
 <title>呐~</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -10,7 +10,7 @@
     width: 100%; height: 100%;
     overflow: hidden;
     background: linear-gradient(160deg, #1a0a2e 0%, #2d1b69 25%, #5b2c6f 50%, #b34180 75%, #e8a0bf 100%);
-    font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+    font-family: PingFang SC, Microsoft YaHei, sans-serif;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
     user-select: none;
@@ -231,62 +231,62 @@
 </head>
 <body>
 
-<div class="loading-indicator" id="loadingIndicator">
-  <div class="loading-spinner"></div>
-  <div class="loading-text">正在准备惊喜</div>
+<div class=loading-indicator id=loadingIndicator>
+  <div class=loading-spinner></div>
+  <div class=loading-text>正在准备惊喜</div>
 </div>
 
 
-<div class="start-overlay" id="startOverlay">
-  <div class="start-overlay-inner">
-    <div class="start-overlay-icon">💗</div>
-    <div class="start-overlay-text">轻触开始</div>
-    <div class="start-overlay-sub">点击任意位置</div>
+<div class=start-overlay id=startOverlay>
+  <div class=start-overlay-inner>
+    <div class=start-overlay-icon>💗</div>
+    <div class=start-overlay-text>轻触开始</div>
+    <div class=start-overlay-sub>点击任意位置</div>
   </div>
 </div>
 
-<div class="daily-message" id="dailyMessage">又是爱你的一天</div>
+<div class=daily-message id=dailyMessage>又是爱你的一天</div>
 
-<button class="bgm-toggle" id="bgmToggle" title="暂停/播放背景音乐">♪</button>
+<button class=bgm-toggle id=bgmToggle title=暂停/播放背景音乐>♪</button>
 
-<div class="stars-container" id="starsContainer"></div>
-<div class="floating-hearts" id="floatingHearts"></div>
+<div class=stars-container id=starsContainer></div>
+<div class=floating-hearts id=floatingHearts></div>
 
-<div id="clickZone" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer;"></div>
+<div id=clickZone style=position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer;></div>
 
-<div class="main-container">
-  <div class="title">悄悄给你攒的</div>
-  <div class="subtitle">每一下 都是在想你</div>
-  <div class="heart-area" style="position: relative;">
-    <div class="glow-ring"></div>
-    <div class="glow-ring"></div>
-    <div class="heart-svg-wrap" id="heartSvgWrap">
-      <svg class="heart-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+<div class=main-container>
+  <div class=title>悄悄给你攒的</div>
+  <div class=subtitle>每一下 都是在想你</div>
+  <div class=heart-area style=position: relative;>
+    <div class=glow-ring></div>
+    <div class=glow-ring></div>
+    <div class=heart-svg-wrap id=heartSvgWrap>
+      <svg class=heart-svg viewBox=0 0 100 100 xmlns=http://www.w3.org/2000/svg>
         <defs>
-          <radialGradient id="heartGrad" cx="40%" cy="28%" r="62%">
-            <stop offset="0%" stop-color="#ff6088"/>
-            <stop offset="45%" stop-color="#e8436e"/>
-            <stop offset="100%" stop-color="#b8305a"/>
+          <radialGradient id=heartGrad cx=40% cy=28% r=62%>
+            <stop offset=0% stop-color=#ff6088/>
+            <stop offset=45% stop-color=#e8436e/>
+            <stop offset=100% stop-color=#b8305a/>
           </radialGradient>
         </defs>
-        <path d="M50 84 C22 60, 2 47, 2 29 C2 15, 14 5, 28 5 C36 5, 44 9, 50 15 C56 9, 64 5, 72 5 C86 5, 98 15, 98 29 C98 47, 78 60, 50 84Z" fill="url(#heartGrad)" stroke="rgba(255,255,255,0.2)" stroke-width="0.4"/>
-        <ellipse cx="34" cy="21" rx="7" ry="4.5" fill="rgba(255,255,255,0.22)" transform="rotate(-28 34 21)"/>
+        <path d=M50 84 C22 60, 2 47, 2 29 C2 15, 14 5, 28 5 C36 5, 44 9, 50 15 C56 9, 64 5, 72 5 C86 5, 98 15, 98 29 C98 47, 78 60, 50 84Z fill=url(#heartGrad) stroke=rgba(255,255,255,0.2) stroke-width=0.4/>
+        <ellipse cx=34 cy=21 rx=7 ry=4.5 fill=rgba(255,255,255,0.22) transform=rotate(-28 34 21)/>
       </svg>
     </div>
   </div>
-  <div class="counter-area">
-    <span class="counter-label">已悄悄攒了</span>
-    <span class="counter-num" id="counterNum">0</span>
-    <span class="counter-label">颗</span>
+  <div class=counter-area>
+    <span class=counter-label>已悄悄攒了</span>
+    <span class=counter-num id=counterNum>0</span>
+    <span class=counter-label>颗</span>
   </div>
-  <div class="hint" id="hintText">点一点屏幕试试</div>
+  <div class=hint id=hintText>点一点屏幕试试</div>
 
 </div>
 
-<div class="online-indicator" id="onlineIndicator">
-  <span class="online-dot"></span>对方也在看哦
+<div class=online-indicator id=onlineIndicator>
+  <span class=online-dot></span>对方也在看哦
 </div>
-<div class="sync-toast" id="syncToast"></div>
+<div class=sync-toast id=syncToast></div>
 
 <script>
 (function() {
@@ -450,67 +450,32 @@
     try{var ctx=getAudioCtx();if(!heartbeatBuffer)return;var s=ctx.createBufferSource();s.buffer=heartbeatBuffer;var v=ctx.createGain();v.gain.setValueAtTime(2.5,ctx.currentTime);s.connect(v);v.connect(ctx.destination);s.start(0);}catch(e){}
   }
 
-  // ==================== 背景音乐系统 (Web Audio 合成，极简约 1KB) ====================
+  // ==================== 背景音乐系统 ====================
   var bgmPaused = true;
-  var bgmActive = false;
-  var bgmGain = null;
-  var bgmOscs = [];
+  var bgmAudio = null;
+  var BGM_URL = 'https://raw.githubusercontent.com/Versigen/High-fidelity-songs/main/mariage-dx27amour-beautiful-ambient-piano-219962.mp3';
 
   function initBgmAudio() {
-    if (bgmActive) return;
-    var ctx = getAudioCtx();
-    bgmGain = ctx.createGain();
-    bgmGain.gain.value = 0;
-    bgmGain.connect(ctx.destination);
-
-    // 两个正弦波叠出温柔和声（C大三和弦：C4 E4 G4）
-    var freqs = [261.63, 329.63, 392.00];
-    for (var i = 0; i < 3; i++) {
-      var osc = ctx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.value = freqs[i];
-      var g = ctx.createGain();
-      g.gain.value = i === 0 ? 0.06 : (i === 1 ? 0.03 : 0.04);
-      osc.connect(g);
-      g.connect(bgmGain);
-      osc.start();
-      bgmOscs.push({osc: osc, gain: g});
-    }
-
-    // 轻微 LFO 呼吸感
-    var lfo = ctx.createOscillator();
-    lfo.type = 'sine';
-    lfo.frequency.value = 0.25;
-    var lfoG = ctx.createGain();
-    lfoG.gain.value = 6;
-    lfo.connect(lfoG);
-    for (var j = 0; j < bgmOscs.length; j++) {
-      lfoG.connect(bgmOscs[j].osc.frequency);
-    }
-    lfo.start();
-    bgmActive = true;
+    if (bgmAudio) return;
+    bgmAudio = new Audio(BGM_URL);
+    bgmAudio.loop = true;
+    bgmAudio.volume = 0.3;
   }
 
   function playBgm() {
     if (!bgmPaused) return;
-    bgmPaused = false;
-    if (!bgmActive) initBgmAudio();
-    if (bgmGain) {
-      var t = getAudioCtx().currentTime;
-      bgmGain.gain.cancelScheduledValues(t);
-      bgmGain.gain.setValueAtTime(bgmGain.gain.value || 0, t);
-      bgmGain.gain.linearRampToValueAtTime(0.07, t + 1.8);
-    }
+    if (!bgmAudio) initBgmAudio();
+    bgmAudio.play().then(function() {
+      bgmPaused = false;
+      updateBgmBtn();
+    }).catch(function() {});
   }
 
   function pauseBgm() {
+    if (!bgmAudio) return;
+    bgmAudio.pause();
     bgmPaused = true;
-    if (bgmGain) {
-      var t = getAudioCtx().currentTime;
-      bgmGain.gain.cancelScheduledValues(t);
-      bgmGain.gain.setValueAtTime(bgmGain.gain.value, t);
-      bgmGain.gain.linearRampToValueAtTime(0, t + 1.5);
-    }
+    updateBgmBtn();
   }
 
   function updateBgmBtn() {
