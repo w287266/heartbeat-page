@@ -182,19 +182,7 @@
     padding: 0; outline: none; text-decoration: none;
   }
   .bgm-toggle:hover { background: rgba(255,255,255,0.18); color: #fff; border-color: rgba(255,255,255,0.5); }
-
-  /* QQ音乐播放器浮层 */
-  .qqmusic-player {
-    position: fixed; bottom: 0; left: 0; width: 100%; height: 0;
-    z-index: 50; transition: height 0.35s ease;
-    border: none; border-radius: 16px 16px 0 0;
-    overflow: hidden; background: rgba(0,0,0,0.85);
-  }
-  .qqmusic-player.show { height: 86px; }
-  .qqmusic-player iframe {
-    width: 100%; height: 100%; border: none;
-    border-radius: 16px 16px 0 0;
-  }
+  .bgm-toggle.playing { color: rgba(255,200,210,0.9); border-color: rgba(255,200,210,0.5); }
 
   /* 引导遮罩层 */
   .start-overlay {
@@ -266,10 +254,7 @@
 <div class="daily-message" id="dailyMessage">又是爱你的一天</div>
 
 <button class="bgm-toggle" id="bgmToggle" title="王菲 - 传奇">♪</button>
-
-<div class="qqmusic-player" id="qqmusicPlayer">
-  <iframe id="qqmusicIframe" allow="autoplay"></iframe>
-</div>
+<audio id="bgmAudio" preload="auto" loop></audio>
 
 <div class="stars-container" id="starsContainer"></div>
 <div class="floating-hearts" id="floatingHearts"></div>
@@ -472,32 +457,59 @@
     try{var ctx=getAudioCtx();if(!chimeBuffer)return;var s=ctx.createBufferSource();s.buffer=chimeBuffer;var v=ctx.createGain();v.gain.setValueAtTime(6.0,ctx.currentTime);s.connect(v);v.connect(ctx.destination);s.start(0);}catch(e){}
   }
 
-  // ==================== 背景音乐：QQ音乐（王菲 - 传奇） ====================
+  // ==================== 背景音乐：王菲 - 传奇（HTML5 Audio 自动播放） ====================
   var bgmToggle = document.getElementById('bgmToggle');
-  var qqmusicPlayer = document.getElementById('qqmusicPlayer');
-  var qqmusicIframe = document.getElementById('qqmusicIframe');
-  var playerVisible = false;
-  var iframeLoaded = false;
-  var QQ_SONG_URL = 'https://i.y.qq.com/n2/m/outchain/player/index.html?songid=107559496&songtype=0';
+  var bgmAudio = document.getElementById('bgmAudio');
+  var BGM_URL = 'https://music.163.com/song/media/outer/url?id=29732235.mp3';
+  var bgmPlaying = false;
 
-  bgmToggle.title = '王菲 - 传奇';
+  function startBgm() {
+    if (!bgmAudio.src) {
+      bgmAudio.src = BGM_URL;
+      bgmAudio.load();
+    }
+    bgmAudio.play().then(function() {
+      bgmPlaying = true;
+      bgmToggle.classList.add('playing');
+    }).catch(function() {
+      // 静默处理自动播放被拦截的情况
+    });
+  }
+
+  function toggleBgm() {
+    if (!bgmAudio.src) {
+      bgmAudio.src = BGM_URL;
+      bgmAudio.load();
+    }
+    if (bgmAudio.paused) {
+      bgmAudio.play().then(function() {
+        bgmPlaying = true;
+        bgmToggle.classList.add('playing');
+      }).catch(function(){});
+    } else {
+      bgmAudio.pause();
+      bgmPlaying = false;
+      bgmToggle.classList.remove('playing');
+    }
+  }
+
+  bgmAudio.addEventListener('play', function() {
+    bgmPlaying = true;
+    bgmToggle.classList.add('playing');
+  });
+  bgmAudio.addEventListener('pause', function() {
+    bgmPlaying = false;
+    bgmToggle.classList.remove('playing');
+  });
+  bgmAudio.addEventListener('ended', function() {
+    bgmPlaying = false;
+    bgmToggle.classList.remove('playing');
+  });
+
   bgmToggle.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
-    if (!iframeLoaded) {
-      qqmusicIframe.src = QQ_SONG_URL;
-      iframeLoaded = true;
-    }
-    playerVisible = !playerVisible;
-    if (playerVisible) {
-      qqmusicPlayer.classList.add('show');
-      bgmToggle.style.color = 'rgba(255,200,210,0.9)';
-      bgmToggle.style.borderColor = 'rgba(255,200,210,0.5)';
-    } else {
-      qqmusicPlayer.classList.remove('show');
-      bgmToggle.style.color = 'rgba(255,255,255,0.65)';
-      bgmToggle.style.borderColor = 'rgba(255,255,255,0.3)';
-    }
+    toggleBgm();
   });
 
   // 引导层：微信音频激活（五重策略叠加）
@@ -581,6 +593,7 @@
     try { warmUpAudio(); } catch(err) {}
     startOverlayEl.classList.add('hidden');
     showDailyMessage();
+    startBgm();
 
     // 首次点击也计入计数
     if (e) {
