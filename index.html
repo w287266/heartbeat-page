@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0, minimum-scale=1.0, viewport-fit=cover">
-<title>鍛悀</title>
+<title>呐~</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
   html, body {
@@ -183,7 +183,7 @@
   }
   .bgm-toggle:hover { background: rgba(255,255,255,0.18); color: #fff; border-color: rgba(255,255,255,0.5); }
 
-  /* QQ闊充箰鎾斁鍣ㄦ诞灞?*/
+  /* QQ音乐播放器浮层 */
   .qqmusic-player {
     position: fixed; bottom: 0; left: 0; width: 100%; height: 0;
     z-index: 50; transition: height 0.35s ease;
@@ -196,7 +196,7 @@
     border-radius: 16px 16px 0 0;
   }
 
-  /* 寮曞閬僵灞?*/
+  /* 引导遮罩层 */
   .start-overlay {
     position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;
     display:flex;align-items:center;justify-content:center;
@@ -217,7 +217,7 @@
     color:rgba(255,255,255,0.4);font-size:13px;margin-top:10px;letter-spacing:1px;
   }
 
-  /* 棣栨鎵撳紑姣忔棩闂€?*/
+  /* 首次打开每日问候 */
   .daily-message {
     position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
     z-index:99;pointer-events:none;
@@ -228,7 +228,7 @@
   }
   .daily-message.show{opacity:1;}
 
-  /* 鍔犺浇鎸囩ず鍣?*/
+  /* 加载指示器 */
   .loading-indicator {
     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
     z-index: 200; pointer-events: none;
@@ -251,21 +251,21 @@
 
 <div class="loading-indicator" id="loadingIndicator">
   <div class="loading-spinner"></div>
-  <div class="loading-text">姝ｅ湪鍑嗗鎯婂枩</div>
+  <div class="loading-text">正在准备惊喜</div>
 </div>
 
 
 <div class="start-overlay" id="startOverlay">
   <div class="start-overlay-inner">
-    <div class="start-overlay-icon">馃挆</div>
-    <div class="start-overlay-text">杞昏Е寮€濮?/div>
-    <div class="start-overlay-sub">鐐瑰嚮浠绘剰浣嶇疆</div>
+    <div class="start-overlay-icon">💗</div>
+    <div class="start-overlay-text">轻触开始</div>
+    <div class="start-overlay-sub">点击任意位置</div>
   </div>
 </div>
 
-<div class="daily-message" id="dailyMessage">鍙堟槸鐖变綘鐨勪竴澶?/div>
+<div class="daily-message" id="dailyMessage">又是爱你的一天</div>
 
-<button class="bgm-toggle" id="bgmToggle" title="鐜嬭彶 - 浼犲">鈾?/button>
+<button class="bgm-toggle" id="bgmToggle" title="王菲 - 传奇">♪</button>
 
 <div class="qqmusic-player" id="qqmusicPlayer">
   <iframe id="qqmusicIframe" allow="autoplay"></iframe>
@@ -277,8 +277,8 @@
 <div id="clickZone" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer;"></div>
 
 <div class="main-container">
-  <div class="title">鎮勬倓缁欎綘鏀掔殑</div>
-  <div class="subtitle">姣忎竴涓?閮芥槸鍦ㄦ兂浣?/div>
+  <div class="title">悄悄给你攒的</div>
+  <div class="subtitle">每一下 都是在想你</div>
   <div class="heart-area" style="position: relative;">
     <div class="glow-ring"></div>
     <div class="glow-ring"></div>
@@ -290,22 +290,22 @@
     </div>
   </div>
   <div class="counter-area">
-    <span class="counter-label">宸叉倓鎮勬敀浜?/span>
+    <span class="counter-label">已悄悄攒了</span>
     <span class="counter-num" id="counterNum">0</span>
-    <span class="counter-label">棰?/span>
+    <span class="counter-label">颗</span>
   </div>
-  <div class="hint" id="hintText">鐐逛竴鐐瑰睆骞曡瘯璇?/div>
+  <div class="hint" id="hintText">点一点屏幕试试</div>
 
 </div>
 
 <div class="online-indicator" id="onlineIndicator">
-  <span class="online-dot"></span>瀵规柟涔熷湪鐪嬪摝
+  <span class="online-dot"></span>对方也在看哦
 </div>
 <div class="sync-toast" id="syncToast"></div>
 
 <script>
 (function() {
-  // ==================== 鍩虹鍙橀噺 ====================
+  // ==================== 基础变量 ====================
   const counterNum = document.getElementById('counterNum');
   const clickZone = document.getElementById('clickZone');
   const heartSvgWrap = document.getElementById('heartSvgWrap');
@@ -319,10 +319,10 @@
   let lastClickTime = 0;
   const THROTTLE_MS = 280;
 
-  // ==================== Supabase 鍚屾 (鍘熺敓 fetch, 鏃犲閮ㄤ緷璧? ====================
+  // ==================== Supabase 同步 (原生 fetch, 无外部依赖) ====================
   var SUPABASE_URL = 'https://mssxvglyvwnonljtxupa.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_ruyCN2ByPw5uzd_fzxMqfQ_a-U97j2a';
-  var supabaseReady = true;  // 鏃犻渶绛夊緟 SDK, fetch 濮嬬粓鍙敤
+  var supabaseReady = true;  // 无需等待 SDK, fetch 始终可用
 
   function supabaseFetch(path, options) {
     options = options || {};
@@ -354,7 +354,7 @@
     }).catch(function() { return null; });
   }
 
-  // 鍒濆鍖栵細浠庢湇鍔＄鍔犺浇璁℃暟
+  // 初始化：从服务端加载计数
   getServerCount().then(function(row) {
     if (row && row.count !== null) {
       var today = getChinaDate();
@@ -396,7 +396,7 @@
     return false;
   }
 
-  // 杞鍏滃簳锛氭瘡 5 绉掍粠鏈嶅姟绔媺鍙栵紝妫€娴嬪鏂圭偣鍑?
+  // 轮询兜底：每 5 秒从服务端拉取，检测对方点击
   var pollTimer = setInterval(function() {
     getServerCount().then(function(row) {
       if (row && row.count !== null && row.count > count) {
@@ -410,12 +410,12 @@
         setCount(row.count);
         try { localStorage.setItem('__heart_count', row.count); } catch(e) {}
         showOnlineIndicator();
-        flashToast('瀵规柟鍒氬垰鐐逛簡涓€涓媬');
+        flashToast('对方刚刚点了一下~');
       }
     }).catch(function() {});
   }, 5000);
 
-  // ==================== 鑳屾櫙鏄熷厜 ====================
+  // ==================== 背景星光 ====================
   for (let i = 0; i < 70; i++) {
     const star = document.createElement('div');
     star.className = 'star';
@@ -424,8 +424,8 @@
     starsContainer.appendChild(star);
   }
 
-  // ==================== 椋樿惤鐖卞績 ====================
-  const heartEmojis = ['馃挄','馃挅','馃挆','馃挐','馃┓','馃尭','鉁?,'馃挮','馃','馃晩锔?];
+  // ==================== 飘落爱心 ====================
+  const heartEmojis = ['💕','💖','💗','💝','🩷','🌸','✨','💫','🫧','🕊️'];
   function createFloatingHeart() {
     const el = document.createElement('span');
     el.className = 'float-heart';
@@ -440,7 +440,7 @@
   for(var i=0;i<10;i++){setTimeout(function(){createFloatingHeart();},i*350);}
   setInterval(createFloatingHeart,900);
 
-  // ==================== 棰勫悎鎴愬績璺抽煶鏁堬紙鍜?鍜氾紝闊抽噺鍔犲己锛?====================
+  // ==================== 预合成心跳音效（咚-咚，音量加强） ====================
   var audioCtx = null;
   var chimeBuffer = null;
   function getAudioCtx() {
@@ -451,7 +451,7 @@
   function buildChimeBuffer(){
     var sr=44100;var dur=0.45;var off=new OfflineAudioContext(1,Math.floor(sr*dur),sr);
     var master=off.createGain();master.connect(off.destination);
-    // 蹇冭烦锛氫綆棰戞寮?+ 浜屾璋愭尝锛屾ā鎷?"鍜? 鎰?
+    // 心跳：低频正弦 + 二次谐波，模拟 "咚" 感
     function addPulse(startTime, freq, amp) {
       var o1=off.createOscillator();o1.type='sine';o1.frequency.setValueAtTime(freq,startTime);
       var o2=off.createOscillator();o2.type='sine';o2.frequency.setValueAtTime(freq*1.5,startTime);
@@ -463,8 +463,8 @@
       o1.start(startTime);o1.stop(startTime+0.2);
       o2.start(startTime);o2.stop(startTime+0.2);
     }
-    addPulse(0,    55, 1.2);   // 绗竴璺?"鍜?
-    addPulse(0.18, 52, 0.95);  // 绗簩璺?"鍜? 绋嶈交
+    addPulse(0,    55, 1.2);   // 第一跳 "咚"
+    addPulse(0.18, 52, 0.95);  // 第二跳 "咚" 稍轻
     return off.startRendering();
   }
   buildChimeBuffer().then(function(b){chimeBuffer=b;}).catch(function(){});
@@ -472,7 +472,7 @@
     try{var ctx=getAudioCtx();if(!chimeBuffer)return;var s=ctx.createBufferSource();s.buffer=chimeBuffer;var v=ctx.createGain();v.gain.setValueAtTime(6.0,ctx.currentTime);s.connect(v);v.connect(ctx.destination);s.start(0);}catch(e){}
   }
 
-  // ==================== 鑳屾櫙闊充箰锛歈Q闊充箰锛堢帇鑿?- 浼犲锛?====================
+  // ==================== 背景音乐：QQ音乐（王菲 - 传奇） ====================
   var bgmToggle = document.getElementById('bgmToggle');
   var qqmusicPlayer = document.getElementById('qqmusicPlayer');
   var qqmusicIframe = document.getElementById('qqmusicIframe');
@@ -480,7 +480,7 @@
   var iframeLoaded = false;
   var QQ_SONG_URL = 'https://i.y.qq.com/n2/m/outchain/player/index.html?songid=107559496&songtype=0';
 
-  bgmToggle.title = '鐜嬭彶 - 浼犲';
+  bgmToggle.title = '王菲 - 传奇';
   bgmToggle.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
@@ -500,12 +500,12 @@
     }
   });
 
-  // 寮曞灞傦細寰俊闊抽婵€娲伙紙浜旈噸绛栫暐鍙犲姞锛?
+  // 引导层：微信音频激活（五重策略叠加）
   var startOverlayEl = document.getElementById('startOverlay');
   var audioActivated = false;
   var audioWarmer = null;
 
-  // 鐢熸垚鏋佺煭鏃犲０ WAV锛?.1 绉掞級锛岀敤浜庨煶棰戦鐑В閿?
+  // 生成极短无声 WAV（0.1 秒），用于音频预热解锁
   function createSilentWavUrl() {
     var sr = 44100, ch = 1, bps = 16, sec = 0.1;
     var byteRate = sr * ch * bps / 8;
@@ -523,10 +523,10 @@
 
   function warmUpAudio() {
     if (audioActivated) return;
-    // 绛栫暐1: 婵€娲?鎭㈠ AudioContext
+    // 策略1: 激活/恢复 AudioContext
     var ctx = getAudioCtx();
 
-    // 绛栫暐4: 鍙戜竴澹版瀬鐭棤澹?oscillator 鑴夊啿纭 AudioContext 灏辩华
+    // 策略4: 发一声极短无声 oscillator 脉冲确认 AudioContext 就绪
     try {
       var osc = ctx.createOscillator();
       var gn = ctx.createGain();
@@ -535,7 +535,7 @@
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.01);
     } catch(e) {}
-    // 绛栫暐3: 闅愯棌闊抽棰勭儹鍣?鈥?鎾斁鏋佺煭闈欓煶鐗囨瑙ｉ攣绯荤粺闊抽
+    // 策略3: 隐藏音频预热器 — 播放极短静音片段解锁系统音频
     try {
       if (!audioWarmer) {
         audioWarmer = new Audio();
@@ -550,7 +550,7 @@
     audioActivated = true;
   }
 
-  // 绛栫暐2: WeixinJSBridgeReady 鈥?寰俊涓撳睘浜嬩欢锛屾ˉ灏辩华鍚庡嵆鍒婚鐑?
+  // 策略2: WeixinJSBridgeReady — 微信专属事件，桥就绪后即刻预热
   try {
     document.addEventListener('WeixinJSBridgeReady', function() {
       warmUpAudio();
@@ -582,7 +582,7 @@
     startOverlayEl.classList.add('hidden');
     showDailyMessage();
 
-    // 棣栨鐐瑰嚮涔熻鍏ヨ鏁?
+    // 首次点击也计入计数
     if (e) {
       var cx, cy;
       if (e.touches && e.touches[0]) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
@@ -592,8 +592,8 @@
     }
   }
 
-  // ==================== 寰俊鍏煎锛氱粺涓€ document 浜嬩欢濮旀墭 ====================
-  // touchstart 鍜?click 鍙岄€氶亾鐙珛瑙﹀彂锛屼笉浜掓枼锛沨andleClick 鍐呴儴 280ms 鑺傛祦闃茶繛鍑?
+  // ==================== 微信兼容：统一 document 事件委托 ====================
+  // touchstart 和 click 双通道独立触发，不互斥；handleClick 内部 280ms 节流防连击
   document.addEventListener('touchstart', function(e) {
     if (e.target.closest('#bgmToggle')) return;
     e.preventDefault();
@@ -614,9 +614,9 @@
     handleClick(e.clientX, e.clientY);
   });
 
-  // ==================== 鏂囨湰鍔ㄧ敾 ====================
+  // ==================== 文本动画 ====================
   const particleColors = ['#ff6088','#ff85ab','#ffb3c6','#ffe0e8','#fff','#ff457a','#ff9eb5','#ffccd5'];
-  const popHearts = ['鉂わ笍','馃挄','馃挅','馃挆','馃挊','馃尭'];
+  const popHearts = ['❤️','💕','💖','💗','💘','🌸'];
 
   function spawnPlusOne(x,y){var e=document.createElement('div');e.className='plus-one';e.textContent='+1';e.style.left=x+'px';e.style.top=y+'px';document.body.appendChild(e);setTimeout(function(){e.remove();},950);}
   function spawnParticles(x,y){for(var i=0;i<12;i++){var p=document.createElement('div');p.className='click-particle';var a=(Math.PI*2*i)/12+Math.random()*0.4;var d=Math.random()*40+18;p.style.cssText='left:'+x+'px;top:'+y+'px;width:'+(Math.random()*5+3)+'px;height:'+(Math.random()*5+3)+'px;background:'+particleColors[Math.floor(Math.random()*particleColors.length)]+';--px:'+(Math.cos(a)*d)+'px;--py:'+(Math.sin(a)*d)+'px';document.body.appendChild(p);setTimeout(function(){p.remove();},750);}}
@@ -626,7 +626,7 @@
   function bumpCounter(){counterNum.classList.remove('bump');void counterNum.offsetWidth;counterNum.classList.add('bump');setTimeout(function(){counterNum.classList.remove('bump');},200);}
   function setCount(nc){count=nc;counterNum.textContent=count;bumpCounter();}
 
-  // ==================== 鏍稿績鐐瑰嚮澶勭悊 ====================
+  // ==================== 核心点击处理 ====================
   function handleClick(clientX, clientY) {
     var now = Date.now();
     if(now-lastClickTime<THROTTLE_MS)return;
@@ -650,25 +650,25 @@
     try { navigator.vibrate(30); } catch(e) {}
   }
 
-  // ==================== 璺ㄦ爣绛鹃〉鍚屾 ====================
+  // ==================== 跨标签页同步 ====================
   var channel=null;var peerConnected=false;
   function broadcast(d){if(channel){try{channel.postMessage(d);}catch(e){}}}
   function showOnlineIndicator(){if(!peerConnected){peerConnected=true;onlineIndicator.classList.add('show');}}
   function flashToast(m){syncToast.textContent=m;syncToast.classList.add('flash');setTimeout(function(){syncToast.classList.remove('flash');},2000);}
   function showRemoteRipple(x,y){var r=document.createElement('div');r.className='remote-ripple';r.style.left=x+'px';r.style.top=y+'px';document.body.appendChild(r);setTimeout(function(){r.remove();},1300);}
-  function onRemoteUpdate(d){if(d.count!==undefined&&d.count>count){setCount(d.count);try{localStorage.setItem('__heart_count',d.count);}catch(e){}if(d.x!==undefined&&d.y!==undefined){showRemoteRipple(d.x,d.y);}flashToast('瀵规柟鍒氬垰鐐逛簡涓€涓媬');}}
+  function onRemoteUpdate(d){if(d.count!==undefined&&d.count>count){setCount(d.count);try{localStorage.setItem('__heart_count',d.count);}catch(e){}if(d.x!==undefined&&d.y!==undefined){showRemoteRipple(d.x,d.y);}flashToast('对方刚刚点了一下~');}}
   try{channel=new BroadcastChannel('heart_sync');channel.onmessage=function(e){showOnlineIndicator();if(e.data&&e.data.type==='count'){onRemoteUpdate(e.data);}else if(e.data&&e.data.type==='ping'){showOnlineIndicator();broadcast({type:'pong'});}};broadcast({type:'ping'});}catch(e){channel=null;}
-  window.addEventListener('storage',function(e){if(e.key==='__heart_count'&&e.newValue){var rc=parseInt(e.newValue,10);if(rc>count){setCount(rc);showOnlineIndicator();flashToast('瀵规柟鍒氬垰鐐逛簡涓€涓媬');}}if(e.key==='__heart_ping'){showOnlineIndicator();try{localStorage.setItem('__heart_pong',Date.now().toString());}catch(ex){}}});
+  window.addEventListener('storage',function(e){if(e.key==='__heart_count'&&e.newValue){var rc=parseInt(e.newValue,10);if(rc>count){setCount(rc);showOnlineIndicator();flashToast('对方刚刚点了一下~');}}if(e.key==='__heart_ping'){showOnlineIndicator();try{localStorage.setItem('__heart_pong',Date.now().toString());}catch(ex){}}});
   setInterval(function(){try{localStorage.setItem('__heart_ping',Date.now().toString());}catch(e){}try{var p=localStorage.getItem('__heart_pong');if(p&&Date.now()-parseInt(p,10)<5000){showOnlineIndicator();}}catch(e){}if(channel){broadcast({type:'ping'});}},3000);
 
-  // ==================== 鍒濆鍖栬鏁?====================
+  // ==================== 初始化计数 ====================
   checkDailyReset();
   try{var saved=localStorage.getItem('__heart_count');if(saved){setCount(parseInt(saved,10)||0);}}catch(e){}
 
 
-  // 鑳屾櫙闊充箰锛氱偣鍑?鈾?鎸夐挳鍦ㄥ綋鍓嶉〉闈㈠脊鍑?QQ闊充箰鎾斁鍣紙鐜嬭彶 - 浼犲锛?
+  // 背景音乐：点击 ♪ 按钮在当前页面弹出 QQ音乐播放器（王菲 - 传奇）
 
-  // 闅愯棌鍔犺浇鎸囩ず鍣?
+  // 隐藏加载指示器
   var loadEl = document.getElementById('loadingIndicator');
   if (loadEl) {
     setTimeout(function() { loadEl.classList.add('done'); }, 400);
