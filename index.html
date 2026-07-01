@@ -130,7 +130,6 @@
   }
   .sync-toast.flash { opacity: 1; }
 
-
   .plus-one {
     position: fixed; pointer-events: none; z-index: 30;
     font-size: 22px; font-weight: 700; color: #ff6b9d;
@@ -184,7 +183,6 @@
   .bgm-toggle:hover { background: rgba(255,255,255,0.18); color: #fff; border-color: rgba(255,255,255,0.5); }
   .bgm-toggle.playing { color: rgba(255,200,210,0.9); border-color: rgba(255,200,210,0.5); }
 
-  /* 引导遮罩�?*/
   .start-overlay {
     position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;
     display:flex;align-items:center;justify-content:center;
@@ -205,7 +203,6 @@
     color:rgba(255,255,255,0.4);font-size:13px;margin-top:10px;letter-spacing:1px;
   }
 
-  /* 首次打开每日问�?*/
   .daily-message {
     position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
     z-index:99;pointer-events:none;
@@ -216,7 +213,6 @@
   }
   .daily-message.show{opacity:1;}
 
-  /* 加载指示�?*/
   .loading-indicator {
     position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
     z-index: 200; pointer-events: none;
@@ -242,18 +238,17 @@
   <div class="loading-text">正在准备惊喜</div>
 </div>
 
-
 <div class="start-overlay" id="startOverlay">
   <div class="start-overlay-inner">
     <div class="start-overlay-icon">💗</div>
-    <div class="start-overlay-text">轻触开�?/div>
+    <div class="start-overlay-text">轻触开始</div>
     <div class="start-overlay-sub">点击任意位置</div>
   </div>
 </div>
 
-<div class="daily-message" id="dailyMessage">又是爱你的一�?/div>
+<div class="daily-message" id="dailyMessage">又是爱你的一天</div>
 
-<button class="bgm-toggle" id="bgmToggle" title="王菲 - 传奇">�?/button>
+<button class="bgm-toggle" id="bgmToggle" title="李健 - 传奇">♪</button>
 <audio id="bgmAudio" preload="auto" loop></audio>
 
 <div class="stars-container" id="starsContainer"></div>
@@ -263,7 +258,7 @@
 
 <div class="main-container">
   <div class="title">悄悄给你攒的</div>
-  <div class="subtitle">每一�?都是在想�?/div>
+  <div class="subtitle">每一下 都是在想你</div>
   <div class="heart-area" style="position: relative;">
     <div class="glow-ring"></div>
     <div class="glow-ring"></div>
@@ -275,11 +270,11 @@
     </div>
   </div>
   <div class="counter-area">
-    <span class="counter-label">已悄悄攒�?/span>
+    <span class="counter-label">已悄悄攒了</span>
     <span class="counter-num" id="counterNum">0</span>
-    <span class="counter-label">�?/span>
+    <span class="counter-label">颗</span>
   </div>
-  <div class="hint" id="hintText">点一点屏幕试�?/div>
+  <div class="hint" id="hintText">点一点屏幕试试</div>
 
 </div>
 
@@ -290,24 +285,20 @@
 
 <script>
 (function() {
-  // ==================== 基础变量 ====================
-  const counterNum = document.getElementById('counterNum');
-  const clickZone = document.getElementById('clickZone');
-  const heartSvgWrap = document.getElementById('heartSvgWrap');
-  const floatingContainer = document.getElementById('floatingHearts');
-  const onlineIndicator = document.getElementById('onlineIndicator');
-  const syncToast = document.getElementById('syncToast');
-  const starsContainer = document.getElementById('starsContainer');
-  const hintText = document.getElementById('hintText');
+  var counterNum = document.getElementById('counterNum');
+  var heartSvgWrap = document.getElementById('heartSvgWrap');
+  var floatingContainer = document.getElementById('floatingHearts');
+  var onlineIndicator = document.getElementById('onlineIndicator');
+  var syncToast = document.getElementById('syncToast');
+  var starsContainer = document.getElementById('starsContainer');
 
-  let count = 0;
-  let lastClickTime = 0;
-  const THROTTLE_MS = 280;
+  var count = 0;
+  var lastClickTime = 0;
+  var THROTTLE_MS = 280;
 
-  // ==================== Supabase 同步 (原生 fetch, 无外部依�? ====================
   var SUPABASE_URL = 'https://mssxvglyvwnonljtxupa.supabase.co';
   var SUPABASE_KEY = 'sb_publishable_ruyCN2ByPw5uzd_fzxMqfQ_a-U97j2a';
-  var supabaseReady = true;  // 无需等待 SDK, fetch 始终可用
+  var supabaseReady = true;
 
   function supabaseFetch(path, options) {
     options = options || {};
@@ -339,7 +330,6 @@
     }).catch(function() { return null; });
   }
 
-  // 初始化：从服务端加载计数
   getServerCount().then(function(row) {
     if (row && row.count !== null) {
       var today = getChinaDate();
@@ -381,7 +371,6 @@
     return false;
   }
 
-  // 轮询兜底：每 5 秒从服务端拉取，检测对方点�?
   var pollTimer = setInterval(function() {
     getServerCount().then(function(row) {
       if (row && row.count !== null && row.count > count) {
@@ -400,23 +389,21 @@
     }).catch(function() {});
   }, 5000);
 
-  // ==================== 背景星光 ====================
-  for (let i = 0; i < 70; i++) {
-    const star = document.createElement('div');
+  for (var i = 0; i < 70; i++) {
+    var star = document.createElement('div');
     star.className = 'star';
-    const size = Math.random() * 2.5 + 1;
+    var size = Math.random() * 2.5 + 1;
     star.style.cssText = 'width:'+size+'px;height:'+size+'px;top:'+(Math.random()*100)+'%;left:'+(Math.random()*100)+'%;--dur:'+(Math.random()*3+2.5)+'s;--delay:'+(Math.random()*5)+'s';
     starsContainer.appendChild(star);
   }
 
-  // ==================== 飘落爱心 ====================
-  const heartEmojis = ['💕','💖','💗','💝','🩷','🌸','�?,'💫','🫧','🕊�?];
+  var heartEmojis = ['💕','💖','💗','💝','🩷','🌸','✨','💫','🫧','🕊️'];
   function createFloatingHeart() {
-    const el = document.createElement('span');
+    var el = document.createElement('span');
     el.className = 'float-heart';
-    const size = Math.random()*16+14;
-    const opac = (Math.random()*0.35+0.20).toFixed(2);
-    el.style.cssText = '--size:'+size+'px;--dur:'+(Math.random()*7+6)+'s;--delay:'+(Math.random()*3)+'s;--left:'+(Math.random()*88+6)+'%;--opac:'+opac+';--r1:'+(Math.random()*30-15)+'deg;--r2:'+(Math.random()*50-25)+'deg;--r3:'+(Math.random()*70-35)+'deg;--r4:'+(Math.random()*100-50)+'deg';
+    var s = Math.random()*16+14;
+    var o = (Math.random()*0.35+0.20).toFixed(2);
+    el.style.cssText = '--size:'+s+'px;--dur:'+(Math.random()*7+6)+'s;--delay:'+(Math.random()*3)+'s;--left:'+(Math.random()*88+6)+'%;--opac:'+o+';--r1:'+(Math.random()*30-15)+'deg;--r2:'+(Math.random()*50-25)+'deg;--r3:'+(Math.random()*70-35)+'deg;--r4:'+(Math.random()*100-50)+'deg';
     el.textContent = heartEmojis[Math.floor(Math.random()*heartEmojis.length)];
     floatingContainer.appendChild(el);
     var dur = parseFloat(el.style.getPropertyValue('--dur'))*1000+3000;
@@ -425,7 +412,6 @@
   for(var i=0;i<10;i++){setTimeout(function(){createFloatingHeart();},i*350);}
   setInterval(createFloatingHeart,900);
 
-  // ==================== 预合成心跳音效（�?咚，音量加强�?====================
   var audioCtx = null;
   var chimeBuffer = null;
   function getAudioCtx() {
@@ -436,7 +422,6 @@
   function buildChimeBuffer(){
     var sr=44100;var dur=0.45;var off=new OfflineAudioContext(1,Math.floor(sr*dur),sr);
     var master=off.createGain();master.connect(off.destination);
-    // 心跳：低频正�?+ 二次谐波，模�?"�? �?
     function addPulse(startTime, freq, amp) {
       var o1=off.createOscillator();o1.type='sine';o1.frequency.setValueAtTime(freq,startTime);
       var o2=off.createOscillator();o2.type='sine';o2.frequency.setValueAtTime(freq*1.5,startTime);
@@ -448,8 +433,8 @@
       o1.start(startTime);o1.stop(startTime+0.2);
       o2.start(startTime);o2.stop(startTime+0.2);
     }
-    addPulse(0,    55, 1.2);   // 第一�?"�?
-    addPulse(0.18, 52, 0.95);  // 第二�?"�? 稍轻
+    addPulse(0,    55, 1.2);
+    addPulse(0.18, 52, 0.95);
     return off.startRendering();
   }
   buildChimeBuffer().then(function(b){chimeBuffer=b;}).catch(function(){});
@@ -457,7 +442,6 @@
     try{var ctx=getAudioCtx();if(!chimeBuffer)return;var s=ctx.createBufferSource();s.buffer=chimeBuffer;var v=ctx.createGain();v.gain.setValueAtTime(6.0,ctx.currentTime);s.connect(v);v.connect(ctx.destination);s.start(0);}catch(e){}
   }
 
-  // ==================== 背景音乐：王�?- 传奇（HTML5 Audio 自动播放�?====================
   var bgmToggle = document.getElementById('bgmToggle');
   var bgmAudio = document.getElementById('bgmAudio');
   var BGM_URL = 'bgm.mp3';
@@ -471,9 +455,7 @@
     bgmAudio.play().then(function() {
       bgmPlaying = true;
       bgmToggle.classList.add('playing');
-    }).catch(function() {
-      // 静默处理自动播放被拦截的情况
-    });
+    }).catch(function() {});
   }
 
   function toggleBgm() {
@@ -506,18 +488,17 @@
     bgmToggle.classList.remove('playing');
   });
 
+  bgmToggle.title = '李健 - 传奇';
   bgmToggle.addEventListener('click', function(e) {
     e.preventDefault();
     e.stopPropagation();
     toggleBgm();
   });
 
-  // 引导层：微信音频激活（五重策略叠加�?
   var startOverlayEl = document.getElementById('startOverlay');
   var audioActivated = false;
   var audioWarmer = null;
 
-  // 生成极短无声 WAV�?.1 秒），用于音频预热解�?
   function createSilentWavUrl() {
     var sr = 44100, ch = 1, bps = 16, sec = 0.1;
     var byteRate = sr * ch * bps / 8;
@@ -535,10 +516,7 @@
 
   function warmUpAudio() {
     if (audioActivated) return;
-    // 策略1: 激�?恢复 AudioContext
     var ctx = getAudioCtx();
-
-    // 策略4: 发一声极短无�?oscillator 脉冲确认 AudioContext 就绪
     try {
       var osc = ctx.createOscillator();
       var gn = ctx.createGain();
@@ -547,7 +525,6 @@
       osc.start(ctx.currentTime);
       osc.stop(ctx.currentTime + 0.01);
     } catch(e) {}
-    // 策略3: 隐藏音频预热�?�?播放极短静音片段解锁系统音频
     try {
       if (!audioWarmer) {
         audioWarmer = new Audio();
@@ -562,7 +539,6 @@
     audioActivated = true;
   }
 
-  // 策略2: WeixinJSBridgeReady �?微信专属事件，桥就绪后即刻预�?
   try {
     document.addEventListener('WeixinJSBridgeReady', function() {
       warmUpAudio();
@@ -594,8 +570,6 @@
     startOverlayEl.classList.add('hidden');
     showDailyMessage();
     startBgm();
-
-    // 首次点击也计入计�?
     if (e) {
       var cx, cy;
       if (e.touches && e.touches[0]) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
@@ -605,8 +579,6 @@
     }
   }
 
-  // ==================== 微信兼容：统一 document 事件委托 ====================
-  // touchstart �?click 双通道独立触发，不互斥；handleClick 内部 280ms 节流防连�?
   document.addEventListener('touchstart', function(e) {
     if (e.target.closest('#bgmToggle')) return;
     e.preventDefault();
@@ -627,9 +599,8 @@
     handleClick(e.clientX, e.clientY);
   });
 
-  // ==================== 文本动画 ====================
-  const particleColors = ['#ff6088','#ff85ab','#ffb3c6','#ffe0e8','#fff','#ff457a','#ff9eb5','#ffccd5'];
-  const popHearts = ['❤️','💕','💖','💗','💘','🌸'];
+  var particleColors = ['#ff6088','#ff85ab','#ffb3c6','#ffe0e8','#fff','#ff457a','#ff9eb5','#ffccd5'];
+  var popHearts = ['❤️','💕','💖','💗','💘','🌸'];
 
   function spawnPlusOne(x,y){var e=document.createElement('div');e.className='plus-one';e.textContent='+1';e.style.left=x+'px';e.style.top=y+'px';document.body.appendChild(e);setTimeout(function(){e.remove();},950);}
   function spawnParticles(x,y){for(var i=0;i<12;i++){var p=document.createElement('div');p.className='click-particle';var a=(Math.PI*2*i)/12+Math.random()*0.4;var d=Math.random()*40+18;p.style.cssText='left:'+x+'px;top:'+y+'px;width:'+(Math.random()*5+3)+'px;height:'+(Math.random()*5+3)+'px;background:'+particleColors[Math.floor(Math.random()*particleColors.length)]+';--px:'+(Math.cos(a)*d)+'px;--py:'+(Math.sin(a)*d)+'px';document.body.appendChild(p);setTimeout(function(){p.remove();},750);}}
@@ -639,31 +610,25 @@
   function bumpCounter(){counterNum.classList.remove('bump');void counterNum.offsetWidth;counterNum.classList.add('bump');setTimeout(function(){counterNum.classList.remove('bump');},200);}
   function setCount(nc){count=nc;counterNum.textContent=count;bumpCounter();}
 
-  // ==================== 核心点击处理 ====================
   function handleClick(clientX, clientY) {
     var now = Date.now();
     if(now-lastClickTime<THROTTLE_MS)return;
     lastClickTime=now;
-
     var newCount=count+1;
     setCount(newCount);
     try{localStorage.setItem('__heart_count',newCount);}catch(e){}
     broadcast({type:'count',count:newCount,x:clientX,y:clientY});
     syncToSupabase(newCount);
-
     spawnPlusOne(clientX-15,clientY-20);
     spawnParticles(clientX,clientY);
     if(Math.random()<0.5){spawnPopHeart(clientX,clientY);}
     spawnClickFloating(clientX);
-
     heartSvgWrap.classList.add('pulse');
     setTimeout(function(){heartSvgWrap.classList.remove('pulse');},120);
-
     try { playChime(); } catch(e) {}
     try { navigator.vibrate(30); } catch(e) {}
   }
 
-  // ==================== 跨标签页同步 ====================
   var channel=null;var peerConnected=false;
   function broadcast(d){if(channel){try{channel.postMessage(d);}catch(e){}}}
   function showOnlineIndicator(){if(!peerConnected){peerConnected=true;onlineIndicator.classList.add('show');}}
@@ -674,14 +639,9 @@
   window.addEventListener('storage',function(e){if(e.key==='__heart_count'&&e.newValue){var rc=parseInt(e.newValue,10);if(rc>count){setCount(rc);showOnlineIndicator();flashToast('对方刚刚点了一下~');}}if(e.key==='__heart_ping'){showOnlineIndicator();try{localStorage.setItem('__heart_pong',Date.now().toString());}catch(ex){}}});
   setInterval(function(){try{localStorage.setItem('__heart_ping',Date.now().toString());}catch(e){}try{var p=localStorage.getItem('__heart_pong');if(p&&Date.now()-parseInt(p,10)<5000){showOnlineIndicator();}}catch(e){}if(channel){broadcast({type:'ping'});}},3000);
 
-  // ==================== 初始化计�?====================
   checkDailyReset();
   try{var saved=localStorage.getItem('__heart_count');if(saved){setCount(parseInt(saved,10)||0);}}catch(e){}
 
-
-  // 背景音乐：点�?�?按钮在当前页面弹�?QQ音乐播放器（王菲 - 传奇�?
-
-  // 隐藏加载指示�?
   var loadEl = document.getElementById('loadingIndicator');
   if (loadEl) {
     setTimeout(function() { loadEl.classList.add('done'); }, 400);
