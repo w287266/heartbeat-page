@@ -594,17 +594,26 @@
     }
   }
 
-  function dismissOverlay() {
+  function dismissOverlay(e) {
     if (!startOverlayEl || startOverlayEl.classList.contains('hidden')) return;
-    warmUpAudio();
-    activateBgm();
+    try { warmUpAudio(); } catch(err) {}
+    try { activateBgm(); } catch(err) {}
     startOverlayEl.classList.add('hidden');
     updateBgmBtn();
     showDailyMessage();
+
+    // 首次点击也计入计数
+    if (e) {
+      var cx, cy;
+      if (e.touches && e.touches[0]) { cx = e.touches[0].clientX; cy = e.touches[0].clientY; }
+      else if (e.changedTouches && e.changedTouches[0]) { cx = e.changedTouches[0].clientX; cy = e.changedTouches[0].clientY; }
+      else { cx = e.clientX; cy = e.clientY; }
+      handleClick(cx, cy);
+    }
   }
   if (startOverlayEl) {
-    startOverlayEl.addEventListener('click', function(e) { e.stopPropagation(); dismissOverlay(); });
-    startOverlayEl.addEventListener('touchstart', function(e) { e.stopPropagation(); e.preventDefault(); dismissOverlay(); }, {passive: false});
+    startOverlayEl.addEventListener('click', function(e) { e.stopPropagation(); dismissOverlay(e); });
+    startOverlayEl.addEventListener('touchstart', function(e) { e.stopPropagation(); e.preventDefault(); dismissOverlay(e); }, {passive: false});
   }
 
   // ==================== 文本动画 ====================
@@ -625,8 +634,7 @@
     if(now-lastClickTime<THROTTLE_MS)return;
     lastClickTime=now;
 
-    // 首次交互激活背景音乐
-    activateBgm();
+    try { activateBgm(); } catch(e) {}
 
     var newCount=count+1;
     setCount(newCount);
@@ -642,8 +650,8 @@
     heartSvgWrap.classList.add('pulse');
     setTimeout(function(){heartSvgWrap.classList.remove('pulse');},120);
 
-    playHeartbeat();
-    try{navigator.vibrate(30);}catch(e){}
+    try { playHeartbeat(); } catch(e) {}
+    try { navigator.vibrate(30); } catch(e) {}
   }
 
   // ==================== 事件绑定 ====================
