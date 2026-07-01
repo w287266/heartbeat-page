@@ -39,6 +39,21 @@
     100%{transform:translateY(-105vh) rotate(var(--r4)) scale(0.2);opacity:0}
   }
 
+  .floating-phrases { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 2; }
+  .float-phrase {
+    position: absolute; white-space: nowrap;
+    font-size: 13px; color: rgba(255,255,255,0.42);
+    text-shadow: 0 0 6px rgba(255,150,180,0.25);
+    animation: phraseFloat var(--dur) linear infinite;
+    animation-delay: var(--delay); left: var(--left); bottom: -30px;
+  }
+  @keyframes phraseFloat {
+    0%{transform:translateY(0);opacity:0}
+    10%{opacity:var(--opac)}
+    85%{opacity:var(--opac)}
+    100%{transform:translateY(-105vh);opacity:0}
+  }
+
   .main-container {
     position: relative; z-index: 12;
     display: flex; flex-direction: column;
@@ -249,10 +264,11 @@
 <div class="daily-message" id="dailyMessage">又是爱你的一天</div>
 
 <button class="bgm-toggle" id="bgmToggle" title="李健 - 传奇">♪</button>
-<audio id="bgmAudio" preload="auto" loop></audio>
+<audio id="bgmAudio" src="bgm.mp3" preload="auto" loop autoplay></audio>
 
 <div class="stars-container" id="starsContainer"></div>
 <div class="floating-hearts" id="floatingHearts"></div>
+<div class="floating-phrases" id="floatingPhrases"></div>
 
 <div id="clickZone" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 10; cursor: pointer;"></div>
 
@@ -412,6 +428,37 @@
   for(var i=0;i<10;i++){setTimeout(function(){createFloatingHeart();},i*350);}
   setInterval(createFloatingHeart,900);
 
+  var lovePhrases = [
+    '今天也在偷偷想你',
+    '不小心又打开你的聊天框',
+    '这首歌让我想起你',
+    '你发的消息我看了好几遍',
+    '刚才好像看到你了',
+    '今天的你格外好看',
+    '和你聊天会傻笑',
+    '晚安，早点睡',
+    '你笑起来真好看',
+    '又梦到你了',
+    '今天天气好好',
+    '你的声音很好听',
+    '在干嘛呀',
+    '今天见到你很开心',
+    '你是不是也在想我'
+  ];
+  var phraseContainer = document.getElementById('floatingPhrases');
+  function createFloatingPhrase() {
+    var el = document.createElement('span');
+    el.className = 'float-phrase';
+    var o = (Math.random()*0.28+0.15).toFixed(2);
+    el.style.cssText = '--dur:'+(Math.random()*7+10)+'s;--delay:'+(Math.random()*5)+'s;--left:'+(Math.random()*78+11)+'%;--opac:'+o;
+    el.textContent = lovePhrases[Math.floor(Math.random()*lovePhrases.length)];
+    phraseContainer.appendChild(el);
+    var dur = parseFloat(el.style.getPropertyValue('--dur'))*1000+3000;
+    setTimeout(function(){el.remove();},dur);
+  }
+  for(var i=0;i<5;i++){setTimeout(function(){createFloatingPhrase();},i*1000);}
+  setInterval(createFloatingPhrase,3800);
+
   var audioCtx = null;
   var chimeBuffer = null;
   function getAudioCtx() {
@@ -444,14 +491,9 @@
 
   var bgmToggle = document.getElementById('bgmToggle');
   var bgmAudio = document.getElementById('bgmAudio');
-  var BGM_URL = 'bgm.mp3';
   var bgmPlaying = false;
 
   function startBgm() {
-    if (!bgmAudio.src) {
-      bgmAudio.src = BGM_URL;
-      bgmAudio.load();
-    }
     bgmAudio.play().then(function() {
       bgmPlaying = true;
       bgmToggle.classList.add('playing');
@@ -459,10 +501,6 @@
   }
 
   function toggleBgm() {
-    if (!bgmAudio.src) {
-      bgmAudio.src = BGM_URL;
-      bgmAudio.load();
-    }
     if (bgmAudio.paused) {
       bgmAudio.play().then(function() {
         bgmPlaying = true;
@@ -493,6 +531,14 @@
     e.preventDefault();
     e.stopPropagation();
     toggleBgm();
+  });
+
+  // 自动播放尝试
+  bgmAudio.addEventListener('canplaythrough', function() {
+    bgmAudio.play().then(function() {
+      bgmPlaying = true;
+      bgmToggle.classList.add('playing');
+    }).catch(function() {});
   });
 
   var startOverlayEl = document.getElementById('startOverlay');
